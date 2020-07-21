@@ -24,7 +24,7 @@ def predict_model(model, predict_loader):
 
 def predict(predict_csv_path, output_csv_path, model_path, batch_size, input_length, window_size):
     predict_loader, file_path_list = utils.get_data_loader(predict_csv_path, batch_size, False, True)
-    model = models.PNN(input_length, window_size)
+    model = models.PNN(input_length, window_size).to(DEVICE)
     model.load_state_dict(torch.load(model_path))
     predictions = predict_model(model, predict_loader)
     with open(output_csv_path, 'w') as f:
