@@ -31,3 +31,20 @@ class PNN(nn.Module):
         x = self.fc_2(x)
 
         return torch.sigmoid(x)
+
+
+class FocalLoss(nn.Module):
+    def __init__(self, alpha=1, gamma=2, reduce=True):
+        super(FocalLoss, self).__init__()
+        self.alpha = alpha
+        self.gamma = gamma
+        self.reduce = reduce
+
+    def forward(self, inputs, targets):
+        loss = F.binary_cross_entropy(inputs, targets)
+        pt = torch.exp(-loss)
+        F_loss = self.alpha * (1 - pt)**self.gamma * loss
+        if self.reduce:
+            return torch.mean(F_loss)
+        else:
+            return F_loss
