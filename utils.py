@@ -1,4 +1,3 @@
-import pickle
 import torch
 
 import pandas as pd
@@ -10,9 +9,7 @@ class PNNDataset(Dataset):
         self.y = y
 
     def __getitem__(self, index):
-        with open(self.x[index], 'rb') as f:
-            x = pickle.load(f)
-            x = torch.tensor(x, dtype=torch.long)
+        x = torch.load(self.x[index])
         y = torch.tensor([self.y[index]], dtype=torch.float32)
         return x, y
 
