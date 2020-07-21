@@ -22,9 +22,9 @@ def event_dump(args):
         event = pickle.load(f)
     _id = event['_id']
     payload = vectorize_payload(event['payload'])
-    with open(os.path.join(save_dir, _id + '.dat'), 'wb') as f:
-        pickle.dump(payload, f)
-    return os.path.join(save_dir, _id + '.dat'), int(event['analyResult']) % 2
+    dst_path = os.path.join(save_dir, _id + '.dat')
+    torch.save(payload, dst_path)
+    return dst_path, int(event['analyResult']) % 2
 
 def main(argv):
     csv_path = None
