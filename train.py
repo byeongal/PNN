@@ -13,9 +13,9 @@ import models
 USE_CUDA = torch.cuda.is_available()
 DEVICE = torch.device('cuda' if USE_CUDA else "cpu")
 
-
 def train_model(model, epochs, train_loader, optimizer):
     model.train()
+    loss_func = models.FocalLoss()
     for epoch in range(epochs):
         total_loss = 0
         total_correct = 0
@@ -26,7 +26,7 @@ def train_model(model, epochs, train_loader, optimizer):
                 optimizer.zero_grad()
                 output = model(data)
                 optimizer.zero_grad()
-                loss = F.binary_cross_entropy(output, target)
+                loss = loss_func(output, target)
                 loss.backward()
                 optimizer.step()
                 total += len(data)
@@ -34,16 +34,13 @@ def train_model(model, epochs, train_loader, optimizer):
                 total_loss += loss.item() * len(data)
                 t.set_postfix(loss='{:.4f}'.format(total_loss / total), accuracy='{:.4f}'.format(total_correct / total))
 
-
-
 def train(train_csv_path, model_path, batch_size, epochs, input_length, window_size):
     train_loader = utils.get_data_loader(train_csv_path, batch_size, True)
-    model = models.PNN(input_length, window_size)
-    model = model.to(DEVICE)
+    model = models.PNN(input_length, window_size).to(DEVICE)
     model.apply(utils.init_normal)
     optimizer = optim.Adam(model.parameters())
     train_model(model, epochs, train_loader, optimizer)
-    torch.save(model.module.state_dict(), model_path)
+    torch.save(model.state_dict(), model_path)
 
 def main(argv):
     train_csv_path = None
