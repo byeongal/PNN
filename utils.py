@@ -16,7 +16,7 @@ class PNNDataset(Dataset):
     def __len__(self):
         return len(self.x)
 
-def make_dataloader(csv_path, batch_size = 128, shuffle = True, test_mode = False):
+def get_data_loader(csv_path, batch_size = 128, shuffle = True, test_mode = False):
     df = pd.read_csv(csv_path, header=None)
     file_path_list, labels = df[0].values, df[1].values
     dataset = PNNDataset(file_path_list, labels)
