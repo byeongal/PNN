@@ -48,7 +48,7 @@ def train(train_csv_path, model_path, batch_size, epochs, input_length, window_s
 def main(argv):
     train_csv_path = None
     model_path = 'model.dat'
-    batch_size = 64
+    batch_size = 128
     epochs = 10
     input_length = 1600
     window_size = 5
